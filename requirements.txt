@@ -10,6 +10,7 @@ pandas
 scikit-learn
 top2vec
 nltk
+snscrape
 
 # tests/linter
 black
