@@ -32,6 +32,8 @@ class Get_Data():
 
         self.df.drop_duplicates(inplace=True)
 
+        self.df.dropna(inplace = True)
+
         self.df = self.df[["Tweet"]]
 
 
