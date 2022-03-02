@@ -63,9 +63,8 @@ class Preprocessing():
         x = [lemmatizer.lemmatize(word) for word in x]
         return x
 
-    def top2vec_preprocessing(self,df):
-        self.df = np.vectorize(self.rem_website)(self.df)
-        # self.df = df.applymap(self.rem_website)
+    def top2vec_preprocessing(self):
+        self.df = self.df.applymap(self.rem_website)
         self.df = self.df.applymap(self.rem_special_characters)
         self.df = self.df.applymap(self.rem_stopwords)
 
