@@ -38,6 +38,9 @@ class Get_Data():
 
 
 
-
 if __name__ == '__main__':
-    pass
+    biden_data = Get_Data("biden", "2022-01-01", "2022-03-01", 2)
+    biden_data.tweet_scrape()
+    biden_data.simple_preproc()
+    df = biden_data.df
+    print(df.head())

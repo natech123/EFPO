@@ -32,3 +32,4 @@ memoized-property
 termcolor
 string
 re
+ipython==8.0.1
