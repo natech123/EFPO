@@ -9,7 +9,7 @@ import numpy as np
 class Preprocessing():
 
     def __init__(self,df):
-        self.df = df[["Tweet"]]
+        self.df = df
 
     def rem_nums(self,x):
          # Remove numbers
@@ -57,6 +57,10 @@ class Preprocessing():
 
         return x
 
+    def top2vec_structure(self,x):
+        x = " ".join(word for word in x)
+        return x
+
     def lemmatizing(self, x):
         # Lemmatizing
         lemmatizer = WordNetLemmatizer()
@@ -67,6 +71,9 @@ class Preprocessing():
         self.df = self.df.applymap(self.rem_website)
         self.df = self.df.applymap(self.rem_special_characters)
         self.df = self.df.applymap(self.rem_stopwords)
+        self.df = self.df.applymap(self.top2vec_structure)
+        top2vec_input = [i for i in self.df["Tweet"]]
+        return top2vec_input
 
     def sentiment_analysis_preprocessing(self):
         self.df = self.df.applymap(self.rem_website)
