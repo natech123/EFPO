@@ -3,7 +3,7 @@ from top2vec import Top2Vec
 from EFPO.get_data import Get_Data
 from EFPO.preprocessing import Preprocessing
 
-class Top2Vec_Model(Get_Data):
+class Top2Vec_Model():
 
     def __init__(self, search, date_beg, date_end, number):
         data = Get_Data(search, date_beg, date_end, number)
