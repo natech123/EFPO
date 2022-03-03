@@ -11,6 +11,8 @@ scikit-learn
 top2vec
 nltk
 snscrape
+transformers
+scipy.special
 
 # tests/linter
 black
@@ -22,6 +24,7 @@ yapf
 # API
 gcsfs
 google-cloud-storage
+google.cloud.language_v1
 mlflow
 s3fs
 
@@ -33,3 +36,8 @@ termcolor
 string
 re
 ipython==8.0.1
+os.path
+csv
+urllib.request
+torch
+plotly
