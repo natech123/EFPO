@@ -41,3 +41,4 @@ csv
 urllib.request
 torch
 plotly
+streamlit
