@@ -86,7 +86,7 @@ class Sentiment_Analysis():
         initial_df.sentiment_analysis_preprocessing()
         self.df = initial_df.df
 
-    def roberta(self,x):
+    def roberta(x):
         x = " ".join(x)
         task='sentiment'
         MODEL = f"cardiffnlp/twitter-roberta-base-{task}"

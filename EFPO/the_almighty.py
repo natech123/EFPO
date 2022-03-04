@@ -4,6 +4,9 @@ from EFPO.top2vec import *
 from EFPO.sentiment_analysis import *
 from top2vec import Top2Vec
 import numpy as np
+import umap
+import plotly.express as px
+from sklearn.preprocessing import StandardScaler
 
 class EFPO_Model():
 
@@ -41,19 +44,42 @@ class EFPO_Model():
         tweets = top_5[0]
         index = top_5[2]
         tweet = []
-        sentiment = []
+        sentiment = []#
         for i in index:
-                tweet.append(self.df["Tweet"][i])
+            tweet.append(self.df.iloc[i])
 
-        temp_df = pd.DataFrame(tweet, columns = "tweets")
+        temp_df = pd.DataFrame(tweet, columns = ["tweets"])
         sentiment_df = Preprocessing(temp_df)
         sentiment_df.sentiment_analysis_preprocessing()
         for j in sentiment_df.df["tweets"]:
-            sentiment_tweet = Sentiment_Analysis.google(j)
+            sentiment_tweet = Sentiment_Analysis.roberta(j)
             sentiment.append(sentiment_tweet)
 
-        topic_tweet_sentiment_df = pd.DataFrame([tweet,sentiment], columns=["tweets", "sentiment"])
+        topic_tweet_sentiment_df=pd.DataFrame()
+        topic_tweet_sentiment_df["tweet"]=tweet
+        topic_tweet_sentiment_df["sentiment"]=sentiment
         return topic_tweet_sentiment_df
 
     def top2vec_visualisation(self):
-        pass
+        model = self.model
+        umap_model = umap.UMAP(random_state=42, n_components=3,n_epochs=10000, learning_rate=0.1)
+        umap_fit = umap_model.fit(model._get_document_vectors())
+        scaled_data = StandardScaler().fit_transform(umap_fit.embedding_)
+        og_tweets = []
+        topic = []
+        vector1 = []
+        vector2 = []
+        vector3 = []
+        size_ = []
+        for i in np.arange(0,model.get_num_topics(),1):
+            for index,j in enumerate(model.search_documents_by_topic(i, num_docs=model.topic_sizes[i])[2]):
+                og_tweets.append(self.df["Tweet"].iloc[j])
+                topic.append(str(i))
+                vector1.append(umap_fit.embedding_[j][0])
+                vector2.append(umap_fit.embedding_[j][1])
+                vector3.append(umap_fit.embedding_[j][2])
+                size_.append(1)
+        self.df_umap = pd.DataFrame(data = {"tweets":og_tweets, "topic" : topic,"vector1" : vector1, "vector2" : vector2, "vector3" : vector3})
+        fig = px.scatter_3d(self.df_umap, x="vector1", y="vector2", z="vector3",
+              color="topic", hover_data =["tweets"], title='Visualization of tweets in 3D Space', size_max = 10, size = size_)
+        return fig.show()
