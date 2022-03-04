@@ -5,7 +5,6 @@ import pandas as pd
 
 st.set_page_config(layout = "wide")
 
-
 st.header('Welcome to the Emotional Faces of Public Opinion')
 
 
@@ -18,10 +17,22 @@ if page == 'About':
 else:
     # Display the Search Twitter content here
     st.subheader('Find other perspectives')
-    my_expander = st.expander(label='Click on me to expand search terms!')
-    with my_expander:
+    tweet_search = st.expander(label='Click on me to expand search terms!')
+    with tweet_search:
         st.write('Please enter the Twitter search term, followed by the search dates')
-        title = st.text_input('Enter search term here:')
-        start_date=st.date_input('Enter start date:')
-        end_date=st.date_input('Enter end date:')
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            title = st.text_input('Enter search term here:')
+        with col2:
+            start_date=st.date_input('Enter start date:')
+        with col3:
+            end_date=st.date_input('Enter end date:')
         st.button('Submit search')
+    # Graph display
+    data_display = st.container()
+    with data_display:
+        col1, col2 = st.columns([3,2])
+        with col1:
+            st.write('TensorFlow embedding will go here')
+        with col2:
+            st.write('Tweet dataframe will go here')
