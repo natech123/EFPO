@@ -18,11 +18,11 @@ from google.cloud import language_v1
 # In[2]:
 
 
-#!pip install transformers
-#!pip3 install torch==1.10.2+cu102 torchvision==0.11.3+cu102 torchaudio===0.10.2+cu102 -f https://download.pytorch.org/whl/cu102/torch_stable.html
-#!pip install google-cloud-language
-#!pip install snscrape
-#!pip install nltk
+# !pip install transformers
+# !pip3 install torch==1.10.2+cu102 torchvision==0.11.3+cu102 torchaudio===0.10.2+cu102 -f https://download.pytorch.org/whl/cu102/torch_stable.html
+# !pip install google-cloud-language
+
+
 
 
 # In[3]:
@@ -80,14 +80,21 @@ clean_df.top2vec_preprocessing()
 class Sentiment_Analysis():
     def __init__(self,df):
         self.df=df
-    def sentiment_analysis_statement(self,text):
+
+    def sentiment_clean(self):
+        initial_df = Preprocessing(self.df)
+        initial_df.sentiment_analysis_preprocessing()
+        self.df = initial_df.df
+
+    def roberta(self,x):
+        x = " ".join(x)
         task='sentiment'
         MODEL = f"cardiffnlp/twitter-roberta-base-{task}"
         tokenizer = AutoTokenizer.from_pretrained(MODEL)
         model = AutoModelForSequenceClassification.from_pretrained(MODEL)
         model.save_pretrained(MODEL)
         tokenizer.save_pretrained(MODEL)
-        encoded_input = tokenizer(text, return_tensors='pt')
+        encoded_input = tokenizer(x, return_tensors='pt')
         output = model(**encoded_input)
         scores = output[0][0].detach().numpy()
         scores = softmax(scores)
@@ -97,12 +104,17 @@ class Sentiment_Analysis():
             return "negative"
         else:
             return "neutral"
-    def google_analyze_sentiment2(self,text_content):
+
+    def fit(self):
+        self.df["sentiment"]=np.vectorize(self.google)(self.df["Tweet"])
+
+    def google(self,text_content):
         """
         Analyzing Sentiment in a String
         Args:
           text_content The text content to analyze
         """
+        text_content = " ".join(text_content)
         client = language_v1.LanguageServiceClient()
         type_ = language_v1.Document.Type.PLAIN_TEXT
         language = "en"
@@ -116,30 +128,29 @@ class Sentiment_Analysis():
         else:
             return "neutral"
 
-        
+
     def list_to_string(self,lst):
         return " ".join(lst)
-    
+
     def get_score(self):
         self.df["Tweet_string"]=np.vectorize(self.list_to_string)(self.df["Tweet"])
         self.df["google_sentiment"]=np.vectorize(self.google_analyze_sentiment2)(self.df["Tweet_string"])
         self.df["roberta_sentiment"]=np.vectorize(self.sentiment_analysis_statement)(self.df["Tweet_string"])
 
 
-# In[11]:
+# # In[11]:
 
 
-sentiment_df=Sentiment_Analysis(clean_df.df)
+# sentiment_df=Sentiment_Analysis(clean_df.df)
 
 
-# In[12]:
+# # In[12]:
 
 
-get_ipython().run_cell_magic('time', '', 'sentiment_df.get_score()')
+# get_ipython().run_cell_magic('time', '', 'sentiment_df.get_score()')
 
 
-# In[13]:
+# # In[13]:
 
 
-sentiment_df.df
-
+# sentiment_df.df
