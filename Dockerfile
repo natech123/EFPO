@@ -1,10 +1,7 @@
-ENV PATH \\wsl$\Ubuntu\home\coolyo\code\natech123\EFPO
-
 FROM python:3.8.6-buster
 
-COPY api
-COPY EFPO
-COPY model.joblib /model.joblib
+COPY api /api
+COPY EFPO /EFPO
 COPY requirements.txt /requirements.txt
 
 RUN pip install -r requirements.txt
