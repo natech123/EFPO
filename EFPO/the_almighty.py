@@ -82,4 +82,4 @@ class EFPO_Model():
         self.df_umap = pd.DataFrame(data = {"tweets":og_tweets, "topic" : topic,"vector1" : vector1, "vector2" : vector2, "vector3" : vector3})
         fig = px.scatter_3d(self.df_umap, x="vector1", y="vector2", z="vector3",
               color="topic", hover_data =["tweets"], title='Visualization of tweets in 3D Space', size_max = 10, size = size_)
-        return fig.show()
+        return self.df_umap
