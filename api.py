@@ -16,29 +16,16 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 @app.get("/")
-def index():
-    return {"greeting": "Hello world"}
-@app.get("/predict")
-def predict(search,
-            date_beg,
-            date_end,
-            number):
+#def index():
+#    return {"greeting": "Hello world"}
+#@app.get("/predict")
+def predict(search,date_beg,date_end,number):
     date_beg = datetime.strptime(date_beg, "%Y-%m-%d")
     date_end = datetime.strptime(date_end, "%Y-%m-%d")
-
-    query_dict= {'search': [str(search)],
-                 'date_beg': [date_beg],
-                 'date_end': [date_end],
-                 'number': [int(number)]}
-
-    X_pred = pd.DataFrame(query_dict)
-
-    # pipeline = joblib.load('model.joblib')
-    model=EFPO_Model(search,date_beg,date_end,number)
-    # model = EFPO_Model(query_dict.values)
-    df = model.generate_data()
+    model=EFPO_Model(search,date_beg,date_end,int(number))
+    model.generate_data()
     model.top2vec_fit()
-    # model.top_tweet_sentiment
+    model.top_tweet_sentiment
     vis = model.top2vec_visualisation()
-    return {'DataFrame':df,
-            'Visualisation': vis}
+    return model.df#{'DataFrame':model.df,
+            #'Visualisation': vis}
