@@ -5,6 +5,7 @@ import numpy as np
 from datetime import datetime
 import pytz
 from EFPO.the_almighty import *
+import ipdb
 
 app = FastAPI()
 app.add_middleware(
@@ -22,8 +23,8 @@ def predict(search,
             date_beg,
             date_end,
             number):
-    date_beg = datetime.strptime(date_beg, "%Y-%m-%d %H:%M:%S")
-    date_end = datetime.strptime(date_end, "%Y-%m-%d %H:%M:%S")
+    date_beg = datetime.strptime(date_beg, "%Y-%m-%d")
+    date_end = datetime.strptime(date_end, "%Y-%m-%d")
 
     query_dict= {'search': [str(search)],
                  'date_beg': [date_beg],
@@ -31,11 +32,13 @@ def predict(search,
                  'number': [int(number)]}
 
     X_pred = pd.DataFrame(query_dict)
+
     # pipeline = joblib.load('model.joblib')
-    model = EFPO_Model(X_pred)
+    model=EFPO_Model(search,date_beg,date_end,number)
+    # model = EFPO_Model(query_dict.values)
     df = model.generate_data()
     model.top2vec_fit()
     # model.top_tweet_sentiment
-    vis = model.top2vec_visualisation
+    vis = model.top2vec_visualisation()
     return {'DataFrame':df,
             'Visualisation': vis}
