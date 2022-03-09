@@ -4,12 +4,12 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 
-
+RUN python -m nltk.downloader all -d /usr/local/nltk_data
 COPY api.py /api.py
 COPY EFPO /EFPO
-RUN python -m nltk.downloader all -d /usr/local/nltk_data
+# i moved this code to the front RUN python -m nltk.downloader all -d /usr/local/nltk_data
 
 #RUN python -m nltk.downloader stopwords
 #RUN python -m nltk.downloader punkt
 
-CMD uvicorn api:app --host 0.0.0.0 --port $PORT
+CMD uvicorn api:app --host 0.0.0.0 --port 8000
