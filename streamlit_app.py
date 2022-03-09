@@ -8,7 +8,7 @@ import time
 import requests
 import plotly.express as px
 import seaborn as sns
-
+import matplotlib.pyplot as plt
 
 CSS = """
 h2 {
@@ -31,7 +31,11 @@ h4 {
 
 body{
     font-size: 20;
+    display: flex;
+    justify-content: center;
+
 }
+
 """
 
 
@@ -95,8 +99,7 @@ else:
         with col3:
             end_date=st.date_input('Enter end date:')
         with col4:
-            num_tweets= st.number_input('Enter number of tweets',min_value=500, step=100)
-
+            num_tweets= st.number_input('Enter number of tweets',min_value=100, step=100)
 
         if st.button('Submit Search'):
             col1, col2, col3, = st.columns([1,2,1])
@@ -114,28 +117,34 @@ else:
                 df["vector3"]=response.json()[3]
                 df["Topic"]=response.json()[4]
 
-            data_display = st.container()
-            with data_display:
-                st.subheader('Search Results',anchor='h3')
-                fig = px.scatter_3d(df, x='vector1', y='vector2', z='vector3', size_max=0.01,
-                    color='Topic',template='plotly_dark',hover_data=['Tweet'],title='Visualization of tweets in 3D Space')
-                for item in df['Topic'].unique():
-                    data_display2 = st.container()
-                    with data_display2:
-                        fig.show()
-                        col1, col2 = st.columns([3,2])
-                # Graph display
-                        with col1:
-                            st.dataframe(df)
-                            result.empty()
-                            st.dataframe(response.json()[6])[item]
-                # Dataframe display
-                        with col2:
-                            #fig2 = px.bar(x=df['Topic'],y=df.groupby('Topic').count()['Topic'])
-                            #fig2.show()
-                            clrs = ['grey' if x != item else 'red' for x in df['Topic']]
-                            fig3 = sns.barplot(x=df['Topic'],y=df.groupby('Topic').count()['Topic'],palette=clrs)
-                            fig3.show()
+            #data_display = st.container()
+            #with data_display:
+            plotly_container = st.container()
+            with plotly_container:
+                col1, col2, col3, = st.columns([1, 5, 1])
+                with col1:
+                    st.subheader('Search Results', anchor='h3')
+                with col2:
+
+                    fig = px.scatter_3d(df, x='vector1', y='vector2', z='vector3', size_max=0.01,
+                        color='Topic',template='plotly_dark',hover_data=['Tweet'],width=1000,height=800,title='Visualization of tweets in 3D Space')
+                    st.plotly_chart(fig)
+                    result.empty()
+    dictax = {}
+    for item in df['Topic'].unique():
+        dictax[str(item)] = st.container()
+        with dictax[str(item)]:
+            col1, col2 = st.columns([3,2])
+            with col1:
+                AF1 = pd.DataFrame(response.json()[6][int(item)])
+                AF1.columns = ['Tweets']
+                st.dataframe(AF1)
+            with col2:
+                #fig2 = px.bar(x=df['Topic'],y=df.groupby('Topic').count()['Topic'])
+                #fig2.show()
+                plt.style.use("dark_background")
+                fig = sns.barplot(x=df['Topic'].unique(),y=df.groupby('Topic').count()['Tweet'],palette=['grey' if int(x) != int(item) else 'red' for x in df['Topic']]).figure
+                st.pyplot(fig)
     # Download file
     file_download=st.container()
     with file_download:
@@ -146,4 +155,3 @@ else:
         with col3:
 
             download_file = st.download_button(label='Download File', data='', file_name=f'{search} Results - {start_date} to {end_date}.pdf', mime=None, key=None, help=None, on_click=None, disabled=False)
-
