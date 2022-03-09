@@ -104,7 +104,7 @@ else:
                 result = st.image('keep-calm-we-are-loading-data.png',caption='Data is loading...')
                 # Run request
                 params = {'search':search, 'date_beg':start_date, 'date_end':end_date, 'number':num_tweets}
-                url = 'https://efpoimagename8-4n5leuorga-ew.a.run.app'
+                url = 'https://efpoimagename9-4n5leuorga-ew.a.run.app'
                 response=requests.get(url, params=params)
                 # dict_df=response.json()["DataFrame"]
                 df=pd.DataFrame()
@@ -114,26 +114,28 @@ else:
                 df["vector3"]=response.json()[3]
                 df["Topic"]=response.json()[4]
 
-
             data_display = st.container()
             with data_display:
                 st.subheader('Search Results',anchor='h3')
                 fig = px.scatter_3d(df, x='vector1', y='vector2', z='vector3', size_max=0.01,
-                    color='Topic',hover_data=['Tweet'],title='Visualization of tweets in 3D Space')
-                for item in df['Topic'].unique:
-
-                    fig.show()
-                    col1, col2 = st.columns([3,2])
+                    color='Topic',template='plotly_dark',hover_data=['Tweet'],title='Visualization of tweets in 3D Space')
+                for item in df['Topic'].unique():
+                    data_display2 = st.container()
+                    with data_display2:
+                        fig.show()
+                        col1, col2 = st.columns([3,2])
                 # Graph display
-                    with col1:
-                        st.dataframe(df)
-                        result.empty()
-                        st.dataframe(response.json()[5])[item]
-
+                        with col1:
+                            st.dataframe(df)
+                            result.empty()
+                            st.dataframe(response.json()[6])[item]
                 # Dataframe display
-                    with col2:
-                        fig2 = px.bar(x=df['Topic'],y=df.groupby('Topic').count()['Topic'])
-
+                        with col2:
+                            #fig2 = px.bar(x=df['Topic'],y=df.groupby('Topic').count()['Topic'])
+                            #fig2.show()
+                            clrs = ['grey' if x != item else 'red' for x in df['Topic']]
+                            fig3 = sns.barplot(x=df['Topic'],y=df.groupby('Topic').count()['Topic'],palette=clrs)
+                            fig3.show()
     # Download file
     file_download=st.container()
     with file_download:
