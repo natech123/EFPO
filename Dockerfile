@@ -7,7 +7,9 @@ RUN pip install -r requirements.txt
 
 COPY api.py /api.py
 COPY EFPO /EFPO
-RUN python -m nltk.downloader stopwords
-RUN python -m nltk.downloader punkt
+RUN python -m nltk.downloader all -d /usr/local/nltk_data
+
+#RUN python -m nltk.downloader stopwords
+#RUN python -m nltk.downloader punkt
 
 CMD uvicorn api:app --host 0.0.0.0 --port $PORT
