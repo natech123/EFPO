@@ -4,6 +4,10 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import time
+import requests
+import plotly.express as px
+import seaborn as sns
+
 CSS = """
 h2 {
     color: #34ebc6;
@@ -76,38 +80,49 @@ else:
         st.write('Please enter the Twitter search term, followed by the search dates and the number of tweets you would like to scrape:')
         col1, col2, col3, col4 = st.columns([3,1,1,1.25])
         with col1:
-            title = st.text_input('Enter search term here:')
-            # Connect to api
-
+            search = st.text_input('Enter search term here:')
         with col2:
             start_date=st.date_input('Enter start date:')
-            # Connect to api
         with col3:
             end_date=st.date_input('Enter end date:')
-            # Connect to api
         with col4:
             num_tweets= st.number_input('Enter number of tweets',min_value=500, step=100)
-            # Connect to api
+
         if st.button('Submit Search'):
             col1, col2, col3, = st.columns([1,2,1])
             with col2:
-                result = st.image('keep-calm-we-are-loading-data.png',caption='Data is laoding...')
-                #Once data has loaded
-                # result.empty()
+                result = st.image('keep-calm-we-are-loading-data.png',caption='Data is loading...')
+                # Run request
+                params = {'search':search, 'date_beg':start_date, 'date_end':end_date, 'number':num_tweets}
+                url = 'https://efpoimagename8-4n5leuorga-ew.a.run.app'
+                response=requests.get(url, params=params)
+                # dict_df=response.json()["DataFrame"]
+                df=pd.DataFrame()
+                df["Tweet"]=response.json()[0]
+                df["vector1"]=response.json()[1]
+                df["vector2"]=response.json()[2]
+                df["vector3"]=response.json()[3]
+                df["Topic"]=response.json()[4]
 
-            # Graph display
+
             data_display = st.container()
             with data_display:
                 st.subheader('Search Results',anchor='h3')
-                col1, col2 = st.columns([3,2])
-                with col1:
-                    st.write('TensorFlow embedding will go here')
-                with col2:
-                    st.subheader('Data Frame',anchor='h4')
-                    df = pd.read_csv('raw_data/euphoria.csv')
-                    st.dataframe(df)
-                    time.sleep(3)
-                    result.empty()
+                fig = px.scatter_3d(df, x='vector1', y='vector2', z='vector3', size_max=0.01,
+                    color='Topic',hover_data=['Tweet'],title='Visualization of tweets in 3D Space')
+                for item in df['Topic'].unique:
+
+                    fig.show()
+                    col1, col2 = st.columns([3,2])
+                # Graph display
+                    with col1:
+                        st.dataframe(df)
+                        result.empty()
+                        st.dataframe(response.json()[5])[item]
+
+                # Dataframe display
+                    with col2:
+                        fig2 = px.bar(x=df['Topic'],y=df.groupby('Topic').count()['Topic'])
 
     # Download file
     file_download=st.container()
@@ -117,4 +132,4 @@ else:
             st.write(' Click on the button 👇 to save your search')
         col1, col2, col3, col4, col5 = st. columns(5)
         with col3:
-            download_file = st.download_button(label='Download File', data='', file_name=f'{title} Results - {start_date} to {end_date}.pdf', mime=None, key=None, help=None, on_click=None, disabled=False)
+            download_file = st.download_button(label='Download File', data='', file_name=f'{search} Results - {start_date} to {end_date}.pdf', mime=None, key=None, help=None, on_click=None, disabled=False)
