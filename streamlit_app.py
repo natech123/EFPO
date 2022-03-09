@@ -4,9 +4,11 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import time
+
 import requests
 import plotly.express as px
 import seaborn as sns
+
 
 CSS = """
 h2 {
@@ -14,6 +16,7 @@ h2 {
     font-size: 20;
     text-shadow: 2px 2px 4px #000000;
     text-align: center;
+
 }
 
 h3 {
@@ -31,17 +34,20 @@ body{
 }
 """
 
+
 # Page setup
 st.set_page_config(layout = "wide")
 st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
 # Display image and header
+
 col1, col2, col3, col4, col5 = st.columns(5)
 with col3:
     st.image('EFPO.png')
 col1, col2, col3 = st.columns([0.5,2,0.5])
 with col2:
     st.header('Welcome to the Emotional Faces of Public Opinion!',anchor='h2')
+
 
 # Page selectors
 page = st.sidebar.selectbox('Select page',
@@ -72,6 +78,7 @@ if page == 'About':
 
 
 # Find other perspectives page
+
 else:
     # Display the Search Twitter content here
     st.subheader('Find other perspectives',anchor='h3')
@@ -80,13 +87,16 @@ else:
         st.write('Please enter the Twitter search term, followed by the search dates and the number of tweets you would like to scrape:')
         col1, col2, col3, col4 = st.columns([3,1,1,1.25])
         with col1:
+
             search = st.text_input('Enter search term here:')
+
         with col2:
             start_date=st.date_input('Enter start date:')
         with col3:
             end_date=st.date_input('Enter end date:')
         with col4:
             num_tweets= st.number_input('Enter number of tweets',min_value=500, step=100)
+
 
         if st.button('Submit Search'):
             col1, col2, col3, = st.columns([1,2,1])
@@ -132,4 +142,6 @@ else:
             st.write(' Click on the button 👇 to save your search')
         col1, col2, col3, col4, col5 = st. columns(5)
         with col3:
+
             download_file = st.download_button(label='Download File', data='', file_name=f'{search} Results - {start_date} to {end_date}.pdf', mime=None, key=None, help=None, on_click=None, disabled=False)
+

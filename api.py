@@ -31,6 +31,5 @@ def predict(search,date_beg,date_end,number):
     model.generate_data()
     model.top2vec_fit()
     model.top_tweet_sentiment
-    vis = model.top2vec_visualisation()
-    return model.df#{'DataFrame':model.df,
-            #'Visualisation': vis} (edited)
+    model.top2vec_visualisation()
+    return model.visdf
