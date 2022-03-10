@@ -47,10 +47,10 @@ st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
 col1, col2, col3, col4, col5 = st.columns(5)
 with col3:
-    st.image('.png')
+    st.image('EFPO.png')
 col1, col2, col3 = st.columns([0.5,2,0.5])
 with col2:
-    st.header('Welcome to the Emotional Faces of Public Opinion!',anchor='h2')
+    st.header('Welcome to the Census of Public Opinion!',anchor='h2')
 
 
 # Page selectors
@@ -107,7 +107,7 @@ else:
                 result = st.image('keep-calm-we-are-loading-data.png',caption='Data is loading...')
                 # Run request
                 params = {'search':search, 'date_beg':start_date, 'date_end':end_date, 'number':num_tweets}
-                url = 'https://efpoimagename9-4n5leuorga-ew.a.run.app'
+                url = 'https://efpoimagename11-4n5leuorga-ew.a.run.app'
                 response=requests.get(url, params=params)
                 # dict_df=response.json()["DataFrame"]
                 df=pd.DataFrame()
@@ -137,13 +137,18 @@ else:
             col1, col2 = st.columns([3,2])
             with col1:
                 AF1 = pd.DataFrame(response.json()[6][int(item)])
-                AF1.columns = ['Tweets']
-                st.dataframe(AF1)
+                AF1['Sentiment'] = response.json()[7][int(item)]
+                AF1.columns = ['Tweets','Sentiment']
+                st.table(AF1)
             with col2:
                 #fig2 = px.bar(x=df['Topic'],y=df.groupby('Topic').count()['Topic'])
                 #fig2.show()
                 plt.style.use("dark_background")
-                fig = sns.barplot(x=df['Topic'].unique(),y=df.groupby('Topic').count()['Tweet'],palette=['grey' if int(x) != int(item) else 'red' for x in df['Topic']]).figure
+                dictax = {}
+                for symbol in df['Topic'].unique():
+                    dictax[f'{symbol}'] = 'grey'
+                dictax[f'{item}'] = 'blue'
+                fig = sns.barplot(x=df['Topic'].unique(),y=df.groupby('Topic').count()['Tweet'],palette=dictax).figure
                 st.pyplot(fig)
     # Download file
     file_download=st.container()
