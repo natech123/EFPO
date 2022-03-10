@@ -47,7 +47,7 @@ st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
 col1, col2, col3, col4, col5 = st.columns(5)
 with col3:
-    st.image('EFPO.png')
+    st.image('.png')
 col1, col2, col3 = st.columns([0.5,2,0.5])
 with col2:
     st.header('Welcome to the Emotional Faces of Public Opinion!',anchor='h2')
