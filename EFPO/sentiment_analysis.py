@@ -108,17 +108,17 @@ class Sentiment_Analysis():
     def fit(self):
         self.df["sentiment"]=np.vectorize(self.google)(self.df["Tweet"])
 
-    def google(self,text_content):
+    def google(x):
         """
         Analyzing Sentiment in a String
         Args:
           text_content The text content to analyze
         """
-        text_content = " ".join(text_content)
+        x = " ".join(x)
         client = language_v1.LanguageServiceClient()
         type_ = language_v1.Document.Type.PLAIN_TEXT
         language = "en"
-        document = {"content": text_content, "type_": type_}#, "language": language}
+        document = {"content": x, "type_": type_}#, "language": language}
         encoding_type = language_v1.EncodingType.UTF8
         response = client.analyze_sentiment(request = {'document': document, 'encoding_type': encoding_type})
         if response.document_sentiment.score > 0.33:
