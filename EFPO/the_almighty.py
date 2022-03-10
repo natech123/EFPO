@@ -87,7 +87,7 @@ class EFPO_Model():
                 size_.append(1)
                 if index < 5:
                     list_of_tweets.append(self.df["Tweet"].iloc[j])
-                    sentiment_analysis_topic.append(Sentiment_Analysis.roberta(self.df["Tweet"].iloc[j]))
+                    sentiment_analysis_topic.append(Sentiment_Analysis.google(self.df["Tweet"].iloc[j]))
 
             top_tweets_per_topic.append(list_of_tweets)
             top_tweets_sentiment.append(sentiment_analysis_topic)

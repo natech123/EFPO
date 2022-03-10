@@ -25,8 +25,8 @@ app.add_middleware(
 def predict(search,date_beg,date_end,number):
     date_beg = str(date_beg).replace('/','-')
     date_end = str(date_end).replace('/','-')
-    date_beg = datetime.strptime(date_beg, "%Y-%m-%d")
-    date_end = datetime.strptime(date_end, "%Y-%m-%d")
+    #date_beg = datetime.strptime(date_beg, "%Y-%m-%d")
+    #date_end = datetime.strptime(date_end, "%Y-%m-%d")
     model=EFPO_Model(search,date_beg,date_end,int(number))
     model.generate_data()
     model.top2vec_fit()
