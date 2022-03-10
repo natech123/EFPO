@@ -74,8 +74,10 @@ class EFPO_Model():
         vector3 = []
         size_ = []
         top_tweets_per_topic = []
+        top_tweets_sentiment=[]
         for i in np.arange(0,model.get_num_topics(),1):
             list_of_tweets=[]
+            sentiment_analysis_topic=[]
             for index,j in enumerate(model.search_documents_by_topic(i, num_docs=model.topic_sizes[i])[2]):
                 og_tweets.append(self.df["Tweet"].iloc[j])
                 topic.append(str(i))
@@ -85,9 +87,13 @@ class EFPO_Model():
                 size_.append(1)
                 if index < 5:
                     list_of_tweets.append(self.df["Tweet"].iloc[j])
+                    sentiment_analysis_topic.append(Sentiment_Analysis.roberta(self.df["Tweet"].iloc[j]))
+
             top_tweets_per_topic.append(list_of_tweets)
+            top_tweets_sentiment.append(sentiment_analysis_topic)
+
         #self.df_umap = pd.DataFrame(data = {"tweets":og_tweets, "topic" : topic,"vector1" : vector1, "vector2" : vector2, "vector3" : vector3})
         print("computation complete")
-        self.visdf=[og_tweets,vector1,vector2,vector3,topic,size_,top_tweets_per_topic]
+        self.visdf=[og_tweets,vector1,vector2,vector3,topic,size_,top_tweets_per_topic,top_tweets_sentiment]
         #fig = px.scatter_3d(self.df_umap, x="vector1", y="vector2", z="vector3",
         #      color="topic", hover_data =["tweets"], title='Visualization of tweets in 3D Space', size_max = 10, size = size_)
