@@ -16,3 +16,5 @@ gcloud run deploy --image eu.gcr.io/$PROJECT_ID/$DOCKER_IMAGE_NAME --platform ma
 #type/acceot the following after ran the above code
 type the service name as the docker image name
 allow unauthenticated invocation
+
+#go to cloud run to check the server status and log to see if there is any error running the api
