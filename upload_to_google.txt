@@ -1,0 +1,18 @@
+#login to google cloud
+gcloud auth login
+gcloud auth configure-docker #allow google to use docker image
+gcloud config list
+
+
+
+
+#run the below codes and change the id to your authoristed google PROJECT_ID and your own name for the api
+export PROJECT_ID=YOUR_GOOGLE_PROJECT_ID
+export DOCKER_IMAGE_NAME=OWN_API_NAME
+docker build -t eu.gcr.io/$PROJECT_ID/$DOCKER_IMAGE_NAME .
+docker push eu.gcr.io/$PROJECT_ID/$DOCKER_IMAGE_NAME
+gcloud run deploy --image eu.gcr.io/$PROJECT_ID/$DOCKER_IMAGE_NAME --platform managed --region europe-west1 --memory 8Gi --cpu 2
+
+#type/acceot the following after ran the above code
+type the service name as the docker image name
+allow unauthenticated invocation
