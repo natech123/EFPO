@@ -46,8 +46,8 @@ st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 # Display image and header
 
 col1, col2, col3, col4, col5 = st.columns(5)
-with col3:
-    st.image('EFPO.png')
+#with col3:
+#    st.image('EFPO.png')
 col1, col2, col3 = st.columns([0.5,2,0.5])
 with col2:
     st.header('Welcome to the Census of Public Opinion!',anchor='h2')
@@ -107,7 +107,7 @@ else:
                 result = st.image('keep-calm-we-are-loading-data.png',caption='Data is loading...')
                 # Run request
                 params = {'search':search, 'date_beg':start_date, 'date_end':end_date, 'number':num_tweets}
-                url = 'https://efpoimagename11-4n5leuorga-ew.a.run.app'
+                url = 'https://efpo1-4n5leuorga-ew.a.run.app'
                 response=requests.get(url, params=params)
                 # dict_df=response.json()["DataFrame"]
                 df=pd.DataFrame()
