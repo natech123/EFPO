@@ -30,6 +30,6 @@ def predict(search,date_beg,date_end,number):
     model=EFPO_Model(search,date_beg,date_end,int(number))
     model.generate_data()
     model.top2vec_fit()
-    model.top_tweet_sentiment
+    #model.top_tweet_sentiment
     model.top2vec_visualisation()
     return model.visdf
