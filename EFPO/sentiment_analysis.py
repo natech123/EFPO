@@ -114,7 +114,7 @@ class Sentiment_Analysis():
         Args:
           text_content The text content to analyze
         """
-        x = " ".join(x)
+        #x = " ".join(x)
         client = language_v1.LanguageServiceClient()
         type_ = language_v1.Document.Type.PLAIN_TEXT
         language = "en"
